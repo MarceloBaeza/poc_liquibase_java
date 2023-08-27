@@ -5,7 +5,6 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-
 name: project build
 
 on:
@@ -29,3 +28,13 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn clean install -DskipTests
+
+    - name: Build & push Docker image
+      uses: mr-smithers-excellent/docker-build-push@v6
+      with:
+        image: cheldom/poc_liquibase_springboot
+        tags: latest
+        registry: docker.io
+        dockerfile: Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
