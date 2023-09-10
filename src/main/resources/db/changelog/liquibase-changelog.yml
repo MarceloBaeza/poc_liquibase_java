@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/new_column.sql
+      file: db/changelog/escuela/alumno.sql
+  - include:
+      file: db/changelog/escuela/curso.sql
