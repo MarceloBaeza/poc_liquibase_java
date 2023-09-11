@@ -1,0 +1,41 @@
+version: "3.9"
+networks: 
+ # your network name
+  db_connection:
+    driver: bridge
+services:
+  postgres:
+    image: postgres:14
+    restart: always
+    # build: .
+    container_name: postgres-sql-local
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+      DATABASE_HOST: 127.0.0.1
+      POSTGRES_USER: usuario
+      POSTGRES_DB: lucid
+    volumes:
+      - './postgres_data:/var/lib/postgresql/data'
+    networks:
+      - db_connection
+  run:
+    image: cheldom/poc_liquibase_springboot:latest
+    environment:
+        - DIALECT_DATA_BASE=org.hibernate.dialect.PostgreSQLDialect
+        - SHOW_SQL=true
+        - 'DATABASE_URL=jdbc:postgresql://postgres:5432/lucid'
+        - DATA_BASE_USERNAME=usuario
+        - DATA_BASE_PASSWORD=password
+        - LIQUIBASE_ENABLE=true
+        - HIBERNATE_DDL_AUTO=none
+        - H2_CONSOLE_ENABLED=true
+        - 'PATH=/usr/java/openjdk-17/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+        - JAVA_HOME=/usr/java/openjdk-17
+        - LANG=C.UTF-8
+        - JAVA_VERSION=17.0.2
+    networks:
+      - db_connection
+    depends_on:
+      - postgres
